@@ -6,7 +6,7 @@ plugins {
 android {
     namespace = "com.ocordero.android_part"
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
@@ -55,6 +55,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation("androidx.compose.material:material-icons-core:1.7.1")
+    implementation("androidx.compose.material:material-icons-extended:1.7.1")
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
@@ -70,6 +72,6 @@ dependencies {
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.8.0")
 
-    // Coroutines
+     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 }
