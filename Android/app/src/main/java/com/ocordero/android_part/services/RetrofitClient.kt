@@ -7,8 +7,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    // 10.0.2.2 apunta al localhost de tu PC desde el EMULADOR de Android
-    private const val BASE_URL = "http://10.0.2.2:5000/"
+    private const val BASE_URL = "http://192.168.1.13:5000/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

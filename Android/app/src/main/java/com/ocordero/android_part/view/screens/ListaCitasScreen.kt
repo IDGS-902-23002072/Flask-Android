@@ -26,9 +26,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,11 +56,22 @@ fun ListaCitasScreen(
     val citas by viewModel.citas.collectAsState()
     val cargando by viewModel.cargando.collectAsState()
     val error by viewModel.error.collectAsState()
+    val mensajeExito by viewModel.mensajeExito.collectAsState()
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(mensajeExito) {
+        mensajeExito?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.limpiarMensajeExito()
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Citas Médicas") })
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(onClick = onAgregarClick) {
                 Icon(Icons.Default.Add, contentDescription = "Agregar cita")

@@ -2,6 +2,7 @@ package com.ocordero.android_part.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +11,7 @@ import androidx.navigation.navArgument
 import com.ocordero.android_part.view.screens.AltaCitaScreen
 import com.ocordero.android_part.view.screens.EditarCitaScreen
 import com.ocordero.android_part.view.screens.ListaCitasScreen
+import com.ocordero.android_part.viewmodel.CitaViewModel
 
 sealed class Screen(val route: String) {
     object Lista : Screen("lista_citas")
@@ -22,25 +24,27 @@ sealed class Screen(val route: String) {
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
+    val citaViewModel: CitaViewModel = viewModel()
 
     NavHost(
         navController = navController,
         startDestination = Screen.Lista.route
     ) {
         composable(Screen.Lista.route) {
-
-                ListaCitasScreen(
-                    onAgregarClick = {
-                        navController.navigate(Screen.Alta.route)
-                    },
-                    onEditarClick = { citaId ->
-                        navController.navigate(Screen.Editar.crearRuta(citaId))
-                    }
-                )
+            ListaCitasScreen(
+                viewModel = citaViewModel,
+                onAgregarClick = {
+                    navController.navigate(Screen.Alta.route)
+                },
+                onEditarClick = { citaId ->
+                    navController.navigate(Screen.Editar.crearRuta(citaId))
+                }
+            )
         }
 
         composable(Screen.Alta.route) {
             AltaCitaScreen(
+                viewModel = citaViewModel,
                 onBack = { navController.popBackStack() }
             )
         }
@@ -52,6 +56,7 @@ fun NavGraph() {
             val citaId = backStackEntry.arguments?.getInt("citaId") ?: 0
             EditarCitaScreen(
                 citaId = citaId,
+                viewModel = citaViewModel,
                 onBack = { navController.popBackStack() }
             )
         }
