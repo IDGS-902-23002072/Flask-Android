@@ -1,5 +1,6 @@
 package com.ocordero.android_part.view.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,9 +32,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ocordero.android_part.model.Cita
+import com.ocordero.android_part.view.components.mostrarDatePicker
+import com.ocordero.android_part.view.components.mostrarTimePicker
 import com.ocordero.android_part.viewmodel.CitaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -136,24 +142,71 @@ fun EditarCitaScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    val context = LocalContext.current
+
                     OutlinedTextField(
                         value = fecha,
-                        onValueChange = { fecha = it; errorFecha = null },
-                        label = { Text("Fecha (YYYY-MM-DD)") },
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Fecha de la cita") },
                         isError = errorFecha != null,
                         supportingText = { errorFecha?.let { Text(it) } },
-                        modifier = Modifier.fillMaxWidth()
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                mostrarDatePicker(context) { fechaSeleccionada ->
+                                    fecha = fechaSeleccionada
+                                    errorFecha = null
+                                }
+                            }) {
+                                Icon(Icons.Default.DateRange, contentDescription = "Seleccionar fecha")
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                mostrarDatePicker(context) { fechaSeleccionada ->
+                                    fecha = fechaSeleccionada
+                                    errorFecha = null
+                                }
+                            }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
                         value = hora,
-                        onValueChange = { hora = it; errorHora = null },
-                        label = { Text("Hora (HH:MM)") },
+                        onValueChange = {},
+                        readOnly = true,
+                        enabled = fecha.isNotEmpty(),
+                        label = { Text("Hora de la cita") },
                         isError = errorHora != null,
                         supportingText = { errorHora?.let { Text(it) } },
-                        modifier = Modifier.fillMaxWidth()
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                mostrarTimePicker(context, fecha) { horaSeleccionada, error ->
+                                    if (error != null) {
+                                        errorHora = error
+                                    } else {
+                                        hora = horaSeleccionada
+                                        errorHora = null
+                                    }
+                                }
+                            }) {
+                                Icon(Icons.Default.AccessTime, contentDescription = "Seleccionar hora")
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                mostrarTimePicker(context, fecha) { horaSeleccionada, error ->
+                                    if (error != null) {
+                                        errorHora = error
+                                    } else {
+                                        hora = horaSeleccionada
+                                        errorHora = null
+                                    }
+                                }
+                            }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
