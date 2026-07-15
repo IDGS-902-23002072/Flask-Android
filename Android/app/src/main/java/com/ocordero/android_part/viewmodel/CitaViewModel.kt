@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ocordero.android_part.intermediario.CitaRepository
 import com.ocordero.android_part.model.Cita
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +48,7 @@ class CitaViewModel : ViewModel() {
                 .onFailure { excepcion ->
                     _error.value = "No se pudieron cargar las citas: ${excepcion.message}"
                 }
-
+            delay(600)
             _cargando.value = false
         }
     }
@@ -62,13 +63,13 @@ class CitaViewModel : ViewModel() {
             resultado
                 .onSuccess {
                     _mensajeExito.value = "Cita registrada correctamente"
-                    obtenerCitas() // refrescamos la lista
+                    obtenerCitas()
                     onExito()
                 }
                 .onFailure { excepcion ->
                     _error.value = "No se pudo registrar la cita: ${excepcion.message}"
                 }
-
+            delay(600)
             _cargando.value = false
         }
     }
@@ -83,13 +84,13 @@ class CitaViewModel : ViewModel() {
             resultado
                 .onSuccess {
                     _mensajeExito.value = "Cita actualizada correctamente"
-                    obtenerCitas() // refrescamos la lista
+                    obtenerCitas()
                     onExito()
                 }
                 .onFailure { excepcion ->
                     _error.value = "No se pudo actualizar la cita: ${excepcion.message}"
                 }
-
+            delay(600)
             _cargando.value = false
         }
     }
@@ -104,12 +105,12 @@ class CitaViewModel : ViewModel() {
             resultado
                 .onSuccess {
                     _mensajeExito.value = "Cita eliminada correctamente"
-                    obtenerCitas() // refrescamos la lista
+                    obtenerCitas()
                 }
                 .onFailure { excepcion ->
                     _error.value = "No se pudo eliminar la cita: ${excepcion.message}"
                 }
-
+            delay(600)
             _cargando.value = false
         }
     }
